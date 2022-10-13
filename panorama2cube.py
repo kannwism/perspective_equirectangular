@@ -1,8 +1,8 @@
 import os
-import cv2 
+import cv2
 import lib.Equirec2Perspec as E2P
 import lib.Perspec2Equirec as P2E
-import lib.multi_Perspec2Equirec as m_P2E
+import lib.MultiPerspec2Equirec as MP2E
 import glob
 import argparse
 
@@ -39,24 +39,24 @@ def panorama2cube(input_dir,output_dir):
         cv2.imwrite(output1, img)
 
         img = equ.GetPerspective(90, 90, 0, cube_size, cube_size)  # Specify parameters(FOV, theta, phi, height, width)
-        output2 = out_dir + 'right.png' 
+        output2 = out_dir + 'right.png'
         cv2.imwrite(output2, img)
 
 
         img = equ.GetPerspective(90, 180, 0, cube_size, cube_size)  # Specify parameters(FOV, theta, phi, height, width)
-        output3 = out_dir + 'back.png' 
+        output3 = out_dir + 'back.png'
         cv2.imwrite(output3, img)
 
         img = equ.GetPerspective(90, 270, 0, cube_size, cube_size)  # Specify parameters(FOV, theta, phi, height, width)
-        output4 = out_dir + 'left.png' 
+        output4 = out_dir + 'left.png'
         cv2.imwrite(output4, img)
 
         img = equ.GetPerspective(90, 0, 90, cube_size, cube_size)  # Specify parameters(FOV, theta, phi, height, width)
-        output5 = out_dir + 'top.png' 
+        output5 = out_dir + 'top.png'
         cv2.imwrite(output5, img)
 
         img = equ.GetPerspective(90, 0, -90, cube_size, cube_size)  # Specify parameters(FOV, theta, phi, height, width)
-        output6 = out_dir + 'bottom.png' 
+        output6 = out_dir + 'bottom.png'
         cv2.imwrite(output6, img)
 
 
@@ -67,7 +67,7 @@ def cube2panorama(input_dir,output_dir):
 
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
-    
+
     front = input_dir + '/front.png'
     right = input_dir + '/right.png'
     back = input_dir + '/back.png'
@@ -76,17 +76,17 @@ def cube2panorama(input_dir,output_dir):
     bottom = input_dir + '/bottom.png'
 
     # this can turn cube to panorama
-    per = m_P2E.Perspective([front,right,back,left,top,bottom],
+    per = MP2E.Perspective([front,right,back,left,top,bottom],
                             [[90, 0, 0],[90, 90, 0],[90, 180, 0],
-                            [90, 270, 0],[90, 0, 90],[90, 0, -90]])    
-    
-    
-    img = per.GetEquirec(height,width)  
+                            [90, 270, 0],[90, 0, 90],[90, 0, -90]])
+
+
+    img = per.GetEquirec(height,width)
     cv2.imwrite(output_dir + '/output.png', img)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument('--mode', type=str, default='panorama', choices=['panorama', 'cube'])
     parser.add_argument('--input', type=str, default='./panorama')
     parser.add_argument('--output', type=str, default='./output')
